@@ -80,6 +80,16 @@ cd my_project/
 ./bin/phpunit
 ```
 
+DevSecOps Pipeline
+------------------
+
+This project includes a sample GitHub Actions workflow in
+`.github/workflows/devsecops.yaml` that performs automated security checks and
+static analysis using open source actions. The pipeline runs CodeQL to detect
+vulnerabilities, scans dependencies with Trivy and Composer Audit, and can be
+extended with additional jobs for linting and tests.
+
+
 [1]: https://symfony.com/doc/current/best_practices.html
 [2]: https://symfony.com/doc/current/setup.html#technical-requirements
 [3]: https://symfony.com/doc/current/setup/web_server_configuration.html

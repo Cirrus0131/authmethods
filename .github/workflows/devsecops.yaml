@@ -1,0 +1,58 @@
+name: "DevSecOps"
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+permissions:
+    contents: read
+    security-events: write
+
+jobs:
+    codeql:
+        name: "CodeQL Analysis"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@v4
+
+            - name: "Initialize CodeQL"
+              uses: github/codeql-action/init@v2
+              with:
+                  languages: php
+
+            - name: "Autobuild"
+              uses: github/codeql-action/autobuild@v2
+
+            - name: "Perform CodeQL Analysis"
+              uses: github/codeql-action/analyze@v2
+
+    dependency-scan:
+        name: "Dependency Scan"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@v4
+
+            - name: "Setup PHP"
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  tools: composer:v2
+                  coverage: none
+
+            - name: "Install dependencies"
+              run: composer install --ansi --no-interaction --no-progress
+
+            - name: "Audit Composer packages"
+              run: composer audit
+
+            - name: "Scan with Trivy"
+              uses: aquasecurity/trivy-action@v0.13.1
+              with:
+                  scan-type: fs
+                  exit-code: '1'
+                  ignore-unfixed: true
+                  format: table
