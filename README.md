@@ -85,9 +85,9 @@ DevSecOps Pipeline
 
 This project includes a sample GitHub Actions workflow in
 `.github/workflows/devsecops.yaml` that performs automated security checks and
-static analysis using open source actions. The pipeline runs CodeQL to detect
-vulnerabilities, scans dependencies with Trivy and Composer Audit, and can be
-extended with additional jobs for linting and tests.
+static analysis using only open source actions. The pipeline runs PHPStan to
+analyze the code, audits Composer packages, and scans the repository with
+Trivy. It can be extended with additional jobs for linting and tests.
 
 
 [1]: https://symfony.com/doc/current/best_practices.html

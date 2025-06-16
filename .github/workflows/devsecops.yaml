@@ -11,26 +11,8 @@ permissions:
     security-events: write
 
 jobs:
-    codeql:
-        name: "CodeQL Analysis"
-        runs-on: ubuntu-latest
-        steps:
-            - name: "Checkout code"
-              uses: actions/checkout@v4
-
-            - name: "Initialize CodeQL"
-              uses: github/codeql-action/init@v2
-              with:
-                  languages: php
-
-            - name: "Autobuild"
-              uses: github/codeql-action/autobuild@v2
-
-            - name: "Perform CodeQL Analysis"
-              uses: github/codeql-action/analyze@v2
-
-    dependency-scan:
-        name: "Dependency Scan"
+    security:
+        name: "Security and Static Analysis"
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout code"
@@ -46,11 +28,14 @@ jobs:
             - name: "Install dependencies"
               run: composer install --ansi --no-interaction --no-progress
 
+            - name: "Run PHPStan"
+              run: vendor/bin/phpstan analyse --no-progress -c phpstan.dist.neon
+
             - name: "Audit Composer packages"
-              run: composer audit
+              run: composer audit --no-interaction
 
             - name: "Scan with Trivy"
-              uses: aquasecurity/trivy-action@v0.13.1
+              uses: aquasecurity/trivy-action@0.31.0
               with:
                   scan-type: fs
                   exit-code: '1'
