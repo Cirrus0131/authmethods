@@ -1,0 +1,29 @@
+name: DevSecOps MyPipeline
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  ci-cd:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run unit tests
+      run: vendor/bin/phpunit
+
+    - name: Run SAST (PHPStan)
+      run: vendor/bin/phpstan analyse src --level=max
+
+    - name: Deploy to staging (placeholder)
+      run: echo "Deploy to staging server here"
